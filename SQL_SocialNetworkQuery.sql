@@ -168,6 +168,54 @@ where ID in
 	);
 
 
+#Extras
+#1 
+
+
+
+#2 Find those students for whom all of their friends are in different grades from themselves. Return the students' names and grades. 
+
+select name, grade
+from Highschooler
+where ID not in 
+    (select h.ID from Highschooler h
+    join Friend f on f.ID1 = h.ID
+    join Highschooler h2 on f.ID2 = h2.ID
+    where h.grade = h2.grade 
+    and h.name <> h2.name
+    );
+
+
+#3 What is the average number of friends per student? (Your result should be just one number.) 
+
+select avg(p.n) from
+    (
+    select ID1, count(ID2) as n from Friend
+    group by ID1
+    ) as p;
+
+
+#4 Find the number of students who are either friends with Cassandra or are friends of friends of Cassandra. Do not count Cassandra, even though technically she is a friend of a friend. 
+
+
+
+
+#5 Find the name and grade of the student(s) with the greatest number of friends. 
+
+select h.name, h.grade 
+from Highschooler h 
+join Friend f on h.ID = f.ID1
+group by f.ID1
+having count(*) = (
+    select max(p.c) from
+        (
+        select ID1, count(ID2) as c
+        from Friend
+        group by ID2
+        )as p
+    )
+
+
 
 
 
